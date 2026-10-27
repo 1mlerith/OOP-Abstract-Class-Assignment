@@ -148,13 +148,13 @@ The JVM determines **at runtime** which method implementation to execute — thi
 
 ---
 
-## 📚 Summary
+## Architecture Overview
 
-This case study demonstrates a **Payment System** that uses:
+This payment system is built to make adding new payment providers painless:
 
-1. **Interfaces** (`Payable`, `Refundable`) to define contracts/capabilities
-2. **Abstract class** (`PaymentMethod`) to share common state and behavior
-3. **Inheritance** (`extends`) for code reuse across `CreditCard`, `EWallet`, `BankTransfer`
-4. **Polymorphism** for dynamic method dispatch — same method call, different behavior
+* `Payable` and `Refundable` interfaces split capabilities so methods only implement what they actually support.
+* `PaymentMethod` (abstract class) handles shared state and validation logic to avoid boilerplate across providers.
+* `CreditCard`, `EWallet`, and `BankTransfer` extend the base class with their own provider-specific execution.
+* The checkout flow relies on polymorphism—it calls `.pay()` on the base type without caring which payment method is underneath.
 
-These four pillars work together to create a **flexible, extensible, and maintainable** design. Adding a new payment method (e.g., `Cryptocurrency`) only requires creating a new class that extends `PaymentMethod` — no changes to existing code!
+To add a new provider like `CryptoPayment`, just extend `PaymentMethod` and implement the relevant interfaces. The core checkout logic doesn't need to be touched.
